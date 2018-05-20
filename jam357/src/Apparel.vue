@@ -13,7 +13,7 @@
       <br>
     </div>
 
-    <h1><font size="6">Auctions</font></h1>
+    <h1><font size="6">Apparel</font></h1>
 
     <div class="d-flex" style="margin-bottom: 10px">
       <button id="all" type="button" class="btn-secondary btn">All</button>
@@ -22,12 +22,11 @@
       <button id="upcoming" type="button" class="btn-secondary btn">Upcoming</button>
     </div>
 
-    <div id="allAuctions">
-      <div id="auctions" v-for="auction in auctions">
-        <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+    <div id="apparel">
+      <div v-for="auction in auctions" v-if="auction.categoryId === 1" id="auctionApparel">
+          <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -59,12 +58,11 @@
 </script>
 
 <style>
-  #auctions {
+  #auctionApparel {
     float: left;
     background-color: rgba(128, 128, 128, 0.5);
     height: 200px;
     width: 1164px;
     margin-bottom: 10px;
   }
-
 </style>

@@ -1,26 +1,26 @@
 <template>
   <div id="app">
+    <img src="./assets/365logo.png" class="center" align="left">
     <h1>
-      Trade365
+      <router-link :to="{ name: 'auctions' }" style="color:WHITE"><font size="7">Trade365</font></router-link>
     </h1>
     <br/>
 
-    <div class="d-flex" id="navigation">
-      <img src="./assets/365logo.png" class="center" align="left">
+    <div class="d-flex" id="navigation" style="margin-bottom: 30px">
       <div class="btn-group">
         <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="categories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Categories
         </button>
         <div class="dropdown-menu" aria-labelledby="categories" style="background-color: rgb(128,128,128)">
-          <a class="dropdown-item" href="#Apparel" style="color: white">Apparel</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'apparel' }" style="color:white">Apparel</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#Equipment" style="color: white">Equipment</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'equipment' }" style="color:white">Equipment</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#Vehicles" style="color: white">Vehicles</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'vehicle' }" style="color:white">Vehicles</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#Property" style="color: white">Property</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'property' }" style="color:white">Property</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#Other" style="color: white">Other</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'other' }" style="color:white">Other</router-link></a>
         </div>
       </div>
       <div class="btn-group">
@@ -30,16 +30,17 @@
         <div class="dropdown-menu dropdown-menu" aria-labelledby="myTrade" style="background-color: rgb(128,128,128)">
           <a class="dropdown-item" style="color: rgb(117, 57, 141)">Buying</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#Won" style="color: white">Won,</a>
-          <a class="dropdown-item" href="#inProgress" style="color: white">In Progress</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">Won</router-link></a>
+          <a class="dropdown-item" style="color: white">, </a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">In Progress</router-link></a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" style="color: rgb(117, 57, 141)">Selling</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#myAuctions" style="color: white">My Auctions</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">My Auctions</router-link></a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" style="color: rgb(117, 57, 141)">Profiles</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#myProfile" style="color: white">My Profile</a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">My Profile</router-link></a>
         </div>
       </div>
 
@@ -47,6 +48,7 @@
       <button id="login" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#loginUserModal">Login</button>
       <button id="logout" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#logoutUserModal">Logout</button>
     </div>
+
     <div>
       <div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" aria-labelledby="createUserModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -278,6 +280,8 @@
 
   h1, h2 {
     font-weight: normal;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   ul {

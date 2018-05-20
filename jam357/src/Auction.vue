@@ -1,34 +1,27 @@
 <template>
     <div id="auction">
       <h1>
-        <router-link :to="{ name: 'auctions' }" style="color:#111111"><font size="5">Back to auctions</font></router-link>
+        <router-link :to="{ name: 'auctions' }" style="color:WHITE"><font size="6">Back to auctions</font></router-link>
       </h1>
 
       <br /><br />
 
       <div id="auctionView" v-for="auction in auctions">
-        <label>{{ auction.categoryTitle }}</label>
-        <a>{{ auction.title }}</a>
-        <a>{{ auction.description }}</a>
-        <a>{{ auction.reservePrice }}</a>
-        <a>{{ new Date(auction.startDateTime).toLocaleDateString() }}</a>
-        <a>{{ new Date(auction.endDateTime).toLocaleDateString() }}</a>
+        <p><font size="5">{{ "Category title: " + auction.categoryTitle }}</font></p>
+        <p><font size="5">{{ "Auction title: " + auction.title }}</font></p>
+        <p><font size="5">{{ "Description: " + auction.description }}</font></p>
+        <p><font size="5">{{ "Reserve price: $" + auction.reservePrice }}</font></p>
+        <p><font size="5">{{ "Auction starting date: " + new Date(auction.startDateTime).toLocaleDateString() }}</font></p>
+        <p><font size="5">{{ "Auction ending date: " + new Date(auction.endDateTime).toLocaleDateString() }}</font></p>
       </div>
 
-      <div v-if="bids.length>0">
-        <h3>Previous Bids</h3>
-        <table>
-          <tr>
-            <th>Date</th>
-            <th>Username</th>
-            <th>Amount</th>
-          </tr>
-          <tr v-for="bid in bids">
-            <td>{{ new Date(bid.datetime).toLocaleDateString() }}</td>
-            <td>{{ bid.buyerUsername }}</td>
-            <td>{{ '$' + bid.amount }}</td>
-          </tr>
-        </table>
+      <div v-if="bids.length>0" style="margin-bottom: 80px">
+        <h3 style="margin-bottom: 30px"><font size="6">Previous Bids</font></h3>
+        <div id="bids" v-for="bid in bids">
+          <p><font size="5">{{ "Bid date: " + new Date(bid.datetime).toLocaleDateString() }}</font></p>
+          <p><font size="5">{{ "Buyer username: " + bid.buyerUsername }}</font></p>
+          <p><font size="5">{{ "Amount: $" + bid.amount }}</font></p>
+        </div>
       </div>
 
   </div>
@@ -74,8 +67,16 @@
   #auctionView {
     float: left;
     background-color: rgba(128, 128, 128, 0.5);
-    height: 500px;
+    height: 600px;
     width: 1164px;
+    margin-bottom: 30px;
+  }
+
+  #bids {
+    background-color: rgba(128, 128, 128, 0.5);
+    width: 500px;
     margin-bottom: 10px;
+    margin-right: auto;
+    margin-left: auto;
   }
 </style>
