@@ -6,24 +6,14 @@
 
       <br /><br />
 
-      <table>
-        <tr>
-          <th>Category</th>
-          <th>Auction Title</th>
-          <th>Description</th>
-          <th>Reserve Price</th>
-          <th>Starting Date</th>
-          <th>Ending Date</th>
-        </tr>
-        <tr v-for="auction in auctions">
-          <td>{{ auction.categoryTitle }}</td>
-          <td>{{ auction.title }}</td>
-          <td>{{ auction.description }}</td>
-          <td>{{ auction.reservePrice }}</td>
-          <td>{{ new Date(auction.startDateTime).toLocaleDateString() }}</td>
-          <td>{{ new Date(auction.endDateTime).toLocaleDateString() }}</td>
-        </tr>
-      </table>
+      <div id="auctionView" v-for="auction in auctions">
+        <label>{{ auction.categoryTitle }}</label>
+        <a>{{ auction.title }}</a>
+        <a>{{ auction.description }}</a>
+        <a>{{ auction.reservePrice }}</a>
+        <a>{{ new Date(auction.startDateTime).toLocaleDateString() }}</a>
+        <a>{{ new Date(auction.endDateTime).toLocaleDateString() }}</a>
+      </div>
 
       <div v-if="bids.length>0">
         <h3>Previous Bids</h3>
@@ -81,4 +71,11 @@
 </script>
 
 <style>
+  #auctionView {
+    float: left;
+    background-color: rgba(128, 128, 128, 0.5);
+    height: 500px;
+    width: 1164px;
+    margin-bottom: 10px;
+  }
 </style>

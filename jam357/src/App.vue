@@ -11,7 +11,7 @@
         <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="categories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Categories
         </button>
-        <div class="dropdown-menu" aria-labelledby="categories" style="background-color: #000000">
+        <div class="dropdown-menu" aria-labelledby="categories" style="background-color: rgb(128,128,128)">
           <a class="dropdown-item" href="#Apparel" style="color: white">Apparel</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#Equipment" style="color: white">Equipment</a>
@@ -27,15 +27,18 @@
         <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="myTrade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           MyTrade365
         </button>
-        <div class="dropdown-menu dropdown-menu" aria-labelledby="myTrade" style="background-color: #000000">
-          <p class="dropdown-item">Buying</p>
+        <div class="dropdown-menu dropdown-menu" aria-labelledby="myTrade" style="background-color: rgb(128,128,128)">
+          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Buying</a>
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#Won" style="color: white">Won,</a>
           <a class="dropdown-item" href="#inProgress" style="color: white">In Progress</a>
           <div class="dropdown-divider"></div>
-          <p class="dropdown-item">Selling</p>
+          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Selling</a>
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#myAuctions" style="color: white">My Auctions</a>
           <div class="dropdown-divider"></div>
-          <p class="dropdown-item">Profiles</p>
+          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Profiles</a>
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#myProfile" style="color: white">My Profile</a>
         </div>
       </div>
@@ -49,7 +52,7 @@
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="createUserModalLabel">Register</h5>
+              <h5 class="modal-title" id="createUserModalLabel"><font size="5">Register</font></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -111,7 +114,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="loginUserModalLabel">Login</h5>
+              <h5 class="modal-title" id="loginUserModalLabel"><font size="5">Login</font></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -152,9 +155,9 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="logoutUserModalLabel">Logout session</h5>
+              <h5 class="modal-title" id="logoutUserModalLabel"><font size="5">Logout of session</font></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden=joisdfajhadg"true">&times;</span>
+                <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
@@ -321,6 +324,18 @@
   }
 
   button {
-    background-color: #000000;
+    background-color: rgba(128, 128, 128, 0.65);
+  }
+
+  input {
+    color: rgb(81, 81, 81);
+  }
+
+  .modal-header {
+    background-color: rgba(128, 128, 128, 0.65);
+  }
+
+  .modal-body {
+    color: rgb(81, 81, 81);
   }
 </style>

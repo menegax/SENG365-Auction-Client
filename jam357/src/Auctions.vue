@@ -8,13 +8,13 @@
       <h1><font size="3">Search auctions</font></h1>
       <form>
         <input v-model="searchAuctions" placeholder="Search" align="center"/>
-        <input type="submit" value="Search"/>
+        <input type="submit" value="Search" style="background-color: rgba(128, 128, 128, 0.65)"/>
       </form>
       <br>
     </div>
 
     <div v-for="auction in auctions">
-      <div id="auction">
+      <div id="auctions">
         <p align="right"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
       </div>
     </div>
@@ -50,9 +50,9 @@
 </script>s
 
 <style>
-  #auction {
+  #auctions {
     float: left;
-    Background-color: rgba(0, 0, 0, 0.22);
+    background-color: rgba(128, 128, 128, 0.5);
     height: 200px;
     width: 1164px;
     margin-bottom: 10px;
