@@ -1,24 +1,20 @@
 <template>
   <div>
-    <h1>Display all users</h1>
+    <h1>User Profile</h1>
     <div v-if="errorFlag" style="color: red;">
       {{ error }}
     </div>
 
     <div v-if="$route.params.userId">
       <div id="user">
-        <router-link :to="{ name: 'users' }">Back to Users</router-link>
 
-        <br /><br />
-
-        <table>
-          <tr>
-            <td>User ID</td>
-          </tr>
-          <tr>
-            <td>{{ $route.params.userId }}</td>
-          </tr>
-        </table>
+        <div id="userProfile" v-for="user in users">
+          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Username: " + user.username }}</font></router-link></p>
+          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Given Name: " + user.givenName }}</font></router-link></p>
+          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Family Name: " + user.familyName }}</font></router-link></p>
+          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Email: " + user.email }}</font></router-link></p>
+          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Account Balance: " + user.accountBalance }}</font></router-link></p>
+        </div>
 
       </div>
     </div>
@@ -39,8 +35,8 @@
     },
     methods: {
       getUser: function(){
-        this.$http.get('http://localhost:4941/api/v1/users/' + this.$route.params.auctionId).then(function(response){
-          this.auctions = [response.data];
+        this.$http({method: "get", url:'http://localhost:4941/api/v1/users/' + this.$route.params.userId, headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response){
+          this.users = [response.data];
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
@@ -49,3 +45,13 @@
     }
   }
 </script>
+
+<style>
+  #user {
+    float: left;
+    background-color: rgba(128, 128, 128, 0.5);
+    height: 220px;
+    width: 1164px;
+    margin-bottom: 10px;
+  }
+</style>

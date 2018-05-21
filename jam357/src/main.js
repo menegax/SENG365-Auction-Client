@@ -2,13 +2,9 @@ import Vue from 'vue';
 import App from './App.vue';
 import Auctions from './Auctions.vue';
 import Auction from './Auction.vue';
-import Apparel from './Apparel.vue';
-import Equipment from './Equipment.vue';
-import Vehicle from './Vehicle.vue';
-import Property from './Property.vue';
-import Other from './Other.vue';
-
 import VueRouter from 'vue-router';
+import User from './User.vue'
+
 Vue.use(VueRouter);
 
 import VueResource from 'vue-resource';
@@ -19,7 +15,52 @@ Vue.http.options.emulateJSON = true;
 const routes = [
   {
     path: "/",
-    name: "auctions",
+    name: "allAuctions",
+    component: Auctions
+  },
+  {
+    path: "/:status",
+    name: "active",
+    component: Auctions
+  },
+  {
+    path: "/:status",
+    name: "expired",
+    component: Auctions
+  },
+  {
+    path: "/:status",
+    name: "upcoming",
+    component: Auctions
+  },
+  {
+    path: "/:status",
+    name: "won",
+    component: Auctions
+  },
+  {
+    path: "/:category",
+    name: "apparel",
+    component: Auctions
+  },
+  {
+    path: "/:category",
+    name: "equipment",
+    component: Auctions
+  },
+  {
+    path: "/:category",
+    name: "vehicle",
+    component: Auctions
+  },
+  {
+    path: "/:category",
+    name: "property",
+    component: Auctions
+  },
+  {
+    path: "/:category",
+    name: "other",
     component: Auctions
   },
   {
@@ -28,30 +69,37 @@ const routes = [
     component: Auction
   },
   {
-    path: "/apparel",
-    name: "apparel",
-    component: Apparel
-  },
-  {
-    path: "/equipment",
-    name: "equipment",
-    component: Equipment
-  },
-  {
-    path: "/vehicle",
-    name: "vehicle",
-    component: Vehicle
-  },
-  {
-    path: "/property",
-    name: "property",
-    component: Property
-  },
-  {
-    path: "/other",
-    name: "other",
-    component: Other
+    path: "/user/:userId",
+    name: "user",
+    component: User
   }
+
+
+  // {
+  //   path: "/apparel",
+  //   name: "apparel",
+  //   component: Apparel
+  // },
+  // {
+  //   path: "/equipment",
+  //   name: "equipment",
+  //   component: Equipment
+  // },
+  // {
+  //   path: "/vehicle",
+  //   name: "vehicle",
+  //   component: Vehicle
+  // },
+  // {
+  //   path: "/property",
+  //   name: "property",
+  //   component: Property
+  // },
+  // {
+  //   path: "/other",
+  //   name: "other",
+  //   component: Other
+  // }
 ];
 
 const router = new VueRouter({

@@ -2,27 +2,11 @@
   <div id="app">
     <img src="./assets/365logo.png" class="center" align="left">
     <h1>
-      <router-link :to="{ name: 'auctions' }" style="color:WHITE"><font size="7">Trade365</font></router-link>
+      <router-link :to="{ name: 'allAuctions' }" style="color:WHITE; margin-right: 50px"><font size="7">Trade365</font></router-link>
     </h1>
     <br/>
 
     <div class="d-flex" id="navigation" style="margin-bottom: 30px">
-      <div class="btn-group">
-        <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="categories" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Categories
-        </button>
-        <div class="dropdown-menu" aria-labelledby="categories" style="background-color: rgb(128,128,128)">
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'apparel' }" style="color:white">Apparel</router-link></a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'equipment' }" style="color:white">Equipment</router-link></a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'vehicle' }" style="color:white">Vehicles</router-link></a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'property' }" style="color:white">Property</router-link></a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'other' }" style="color:white">Other</router-link></a>
-        </div>
-      </div>
       <div class="btn-group">
         <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="myTrade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           MyTrade365
@@ -30,8 +14,6 @@
         <div class="dropdown-menu dropdown-menu" aria-labelledby="myTrade" style="background-color: rgb(128,128,128)">
           <a class="dropdown-item" style="color: rgb(117, 57, 141)">Buying</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">Won</router-link></a>
-          <a class="dropdown-item" style="color: white">, </a>
           <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">In Progress</router-link></a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" style="color: rgb(117, 57, 141)">Selling</a>
@@ -40,7 +22,7 @@
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" style="color: rgb(117, 57, 141)">Profiles</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">My Profile</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'user', params: { userId: this.userId } }" style="color:white">My Profile</router-link></a>
         </div>
       </div>
 
@@ -65,35 +47,35 @@
                 <div class="form-group">
                   <label class="control-label col-sm-2">Given Name:</label>
                   <div class="col-sm-9">
-                    <input class="col-lg-10" placeholder="e.g. John">
+                    <input v-model="registrationGivenName" class="col-lg-10" placeholder="e.g. John">
                     <p class="text-warning" id="registrationGivenNameInvalid" align="center">*INVALID*</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-sm-2">Family Name:</label>
                   <div class="col-sm-9">
-                    <input class="col-lg-10" placeholder="e.g. Bloggs">
+                    <input v-model="registrationFamilyName" class="col-lg-10" placeholder="e.g. Bloggs">
                     <p class="text-warning" id="registrationFamilyNameInvalid" align="center">*INVALID*</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-sm-2">Username:</label>
                   <div class="col-sm-9">
-                    <input class="col-lg-10" placeholder="e.g. abc123">
+                    <input v-model="registrationUsername" class="col-lg-10" placeholder="e.g. abc123">
                     <p class="text-warning" id="registrationUsernameInvalid" align="center">*INVALID*</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-sm-2">Email:</label>
                   <div class="col-sm-9">
-                    <input class="col-lg-10" placeholder="e.g. email@example.com" type="email">
+                    <input v-model="registrationEmail" class="col-lg-10" placeholder="e.g. email@example.com" type="email">
                     <p class="text-warning" id="registrationEmailInvalid" align="center">*INVALID*</p>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-sm-2">Password:</label>
                   <div class="col-sm-9">
-                    <input class="col-lg-10" placeholder="Enter Password" type="password">
+                    <input v-model="registrationPassword" class="col-lg-10" placeholder="Enter Password" type="password">
                     <p class="text-warning" id="registrationPasswordInvalid" align="center">*INVALID*</p>
                   </div>
                 </div>
@@ -194,7 +176,12 @@
         userId: 0,
         token: "",
         username: "",
-        password: ""
+        password: "",
+        registrationGivenName: "",
+        registrationFamilyName: "",
+        registrationUsername: "",
+        registrationEmail: "",
+        registrationPassword: "",
       }
     },
     mounted: function() {
@@ -225,7 +212,18 @@
         }
       },
       register: function() {
-        this.$http.put('http://localhost:4941/api/v1/users').then(function(response){
+        this.$http.post('http://localhost:4941/api/v1/users', JSON.stringify({
+          username: this.registrationUsername,
+          givenName: this.registrationGivenName,
+          familyName: this.registrationFamilyName,
+          email: this.registrationEmail,
+          password: this.registrationPassword
+        })).then(function(response){
+          this.registrationUsername = "";
+          this.registrationGivenName = "";
+          this.registrationFamilyName = "";
+          this.registrationEmail = "";
+          this.registrationPassword = "";
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
@@ -235,12 +233,12 @@
         this.hide("register");
         this.hide("login");
         this.show("logout");
-        this.$http.put('http://localhost:4941/api/v1/users/login', JSON.stringify({
-          "username": this.username,
-          "password": this.password
+        this.$http.post('http://localhost:4941/api/v1/users/login', JSON.stringify({
+          username: this.username,
+          password: this.password
         })).then(function(response) {
           this.userId = response.data.id;
-          this.token = response.data.token;
+          localStorage.setItem("token", response.data.token);
           this.username = "";
           this.password = "";
         }, function(error) {
@@ -252,7 +250,7 @@
         this.hide("logout");
         this.show("register");
         this.show("login");
-        this.$http.put('http://localhost:4941/api/v1/users/logout').then(function(response) {
+        this.$http({method: 'post', url: 'http://localhost:4941/api/v1/users/logout', headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response) {
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
@@ -269,7 +267,6 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #f8f8ff;
-    /*margin-top: 60px;*/
   }
 
   body {
