@@ -2,7 +2,7 @@
   <div id="app">
     <img src="./assets/365logo.png" class="center" align="left">
     <h1>
-      <router-link :to="{ name: 'allAuctions' }" style="color:WHITE; margin-right: 50px"><font size="7">Trade365</font></router-link>
+      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 50px"><font size="7">Trade365</font></router-link>
     </h1>
     <br/>
 
@@ -219,6 +219,9 @@
           email: this.registrationEmail,
           password: this.registrationPassword
         })).then(function(response){
+          this.username = this.registrationUsername;
+          this.password = this.registrationPassword;
+          this.login();
           this.registrationUsername = "";
           this.registrationGivenName = "";
           this.registrationFamilyName = "";
@@ -238,6 +241,7 @@
           password: this.password
         })).then(function(response) {
           this.userId = response.data.id;
+          localStorage.setItem("userId", response.data.id);
           localStorage.setItem("token", response.data.token);
           this.username = "";
           this.password = "";
@@ -251,6 +255,7 @@
         this.show("register");
         this.show("login");
         this.$http({method: 'post', url: 'http://localhost:4941/api/v1/users/logout', headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response) {
+          localStorage.removeItem("token");
         }, function(error) {
           this.error = error;
           this.errorFlag = true;

@@ -14,12 +14,12 @@ Vue.http.options.emulateJSON = true;
 
 const routes = [
   {
-    path: "/",
+    path: "/:status",
     name: "allAuctions",
     component: Auctions
   },
   {
-    path: "/:status",
+    path: "/",
     name: "active",
     component: Auctions
   },
@@ -36,6 +36,11 @@ const routes = [
   {
     path: "/:status",
     name: "won",
+    component: Auctions
+  },
+  {
+    path: "/:status",
+    name: "searched",
     component: Auctions
   },
   {

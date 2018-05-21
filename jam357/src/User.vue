@@ -6,18 +6,60 @@
     </div>
 
     <div v-if="$route.params.userId">
-      <div id="user">
+      <div id="user" v-for="user in users">
+        <br>
 
-        <div id="userProfile" v-for="user in users">
-          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Username: " + user.username }}</font></router-link></p>
-          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Given Name: " + user.givenName }}</font></router-link></p>
-          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Family Name: " + user.familyName }}</font></router-link></p>
-          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Email: " + user.email }}</font></router-link></p>
-          <p align="center"><router-link :to="{ name: 'allAuctions' }" style="color:white"><font size="5">{{ "Account Balance: " + user.accountBalance }}</font></router-link></p>
-        </div>
+        <p><font size="5">{{ "Username: " + user.username }}</font></p>
+        <p><font size="5">{{ "Given Name: " + user.givenName }}</font></p>
+        <p><font size="5">{{ "Family Name: " + user.familyName }}</font></p>
+        <p><font size="5">{{ "Email: " + user.email }}</font></p>
+        <p><font size="5">{{ "Account Balance: $" + user.accountBalance }}</font></p>
+
+        <button id="edit" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#editUserModal"
+                style="background-color: rgba(255, 255, 255, 0)"><font size="6">Edit User</font></button>
 
       </div>
     </div>
+
+    <div>
+      <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editUserModalLabel"><font size="5">Login</font></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Given Name:</label>
+                  <div class="col-sm-9">
+                    <input v-model="editGivenName" class="col-lg-10">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Family Name:</label>
+                  <div class="col-sm-9">
+                    <input v-model="editFamilyName" class="col-lg-10">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="getUser()">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="editUser()">
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -27,7 +69,9 @@
       return{
         error: "",
         errorFlag: false,
-        users: []
+        users: [],
+        editGivenName: "",
+        editFamilyName: ""
       }
     },
     mounted: function() {
@@ -37,10 +81,23 @@
       getUser: function(){
         this.$http({method: "get", url:'http://localhost:4941/api/v1/users/' + this.$route.params.userId, headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response){
           this.users = [response.data];
+          this.editGivenName = response.data.givenName;
+          this.editFamilyName = response.data.familyName;
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
         });
+      },
+      editUser:function(){
+        this.$http({method: "patch", url:'http://localhost:4941/api/v1/users/' + this.$route.params.userId, headers: { "X-Authorization": localStorage.getItem("token") }, body: JSON.stringify({
+          givenName: this.editGivenName,
+          familyName: this.editFamilyName
+        })}).then(function(response){
+          this.getUser();
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        })
       }
     }
   }
@@ -50,7 +107,7 @@
   #user {
     float: left;
     background-color: rgba(128, 128, 128, 0.5);
-    height: 220px;
+    height: 300px;
     width: 1164px;
     margin-bottom: 10px;
   }

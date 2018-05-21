@@ -7,8 +7,8 @@
     <div align="center" style="margin-bottom: 10px">
       <h1><font size="6">Search auctions</font></h1>
       <form>
-        <input v-model="searchAuctions" placeholder="Search" align="center"/>
-        <!--<input class="btn btn-secondary btn"type="submit" value="Search" style="background-color: rgba(128, 128, 128, 0.65); color: WHITE"/>-->
+        <input v-model="searchAuctions" align="center"/>
+        <router-link :to="{ name: 'searched', params: { status: '0' } }" @click.native="getAuctionsSearch" style="color:WHITE"><font size="4">Search</font></router-link>
       </form>
       <br>
     </div>
@@ -37,15 +37,15 @@
           Status
         </button>
         <div class="dropdown-menu" aria-labelledby="status" style="background-color: rgb(128,128,128)">
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'allAuctions' }" style="color:white">All</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'allAuctions', params: { status: '1' } }" style="color:white">All</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'active', params: { status: '1' } }" style="color:white">Active</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'active' }" style="color:white">Active</router-link></a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'expired', params: { status: '2' } }" style="color:white">Expired</router-link></a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'upcoming', params: { status: '3' } }" style="color:white">Upcoming</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white" id="wonLink"><router-link :to="{ name: 'won', params: { status: '4' } }" style="color:white">Won</router-link></a>
+          <a class="dropdown-item" style="color: white" id="wonLink"><router-link :to="{ name: 'won', params: { status: '4' } }" style="color:white" @click.native="wonAuctions()">Won</router-link></a>
         </div>
       </div>
     </div>
@@ -98,12 +98,18 @@
       </div>
     </div>
 
-    <div v-else-if="$route.params.status === '1'">
-      <div id="active">
-        <div v-for="auction in auctions">
-          <div v-if="auction.endDateTime >= new Date() && auction.startDateTime <= new Date()" id="auctionsActive">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
-          </div>
+    <div v-else-if="$route.params.status === '0'">
+      <div id="searched">
+        <div v-for="auction in auctionsWithSearch" id="auctionsSearched">
+          <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+        </div>
+      </div>
+    </div>
+
+    <div v-else  v-else-if="$route.params.status === '1'">
+      <div id="allAuctions">
+        <div id="auctions" v-for="auction in auctions">
+          <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
         </div>
       </div>
     </div>
@@ -130,8 +136,8 @@
 
     <div v-else-if="$route.params.status === '4'">
       <div id="won">
-        <div v-for="auction in auctions">
-          <div v-if="auction.endDateTime <= new Date()" id="auctionsWon">
+        <div v-for="auction in auctionsWon">
+          <div v-if="auction.id === this.userId" id="auctionsWon">
             <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
@@ -139,19 +145,12 @@
     </div>
 
     <div v-else>
-      <div id="allAuctions">
-        <!--<div v-if="searchAuctions === ''">-->
-          <div id="auctions" v-for="auction in auctions">
+      <div id="active">
+        <div v-for="auction in auctions">
+          <div v-if="auction.endDateTime >= new Date() && auction.startDateTime <= new Date()" id="auctionsActive">
             <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
-        <!--</div>-->
-        <!--<div v-else>-->
-          <!--<div v-for="auction in auctions">-->
-            <!--<div id="auctionsSearched" v-if="auction.title.toLowerCase().includes(searchauctions.toLowerCase())">-->
-              <!--<p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
+        </div>
       </div>
     </div>
 
@@ -165,34 +164,36 @@
         error: "",
         errorFlag: false,
         auctions: [],
+        auctionsWon: [],
+        auctionsWithSearch: [],
         auction: null,
-        searchAuctions: ""
+        searchAuctions: "",
+        userId: localStorage.getItem("userId")
       }
     },
     mounted: function() {
       this.getAuctions();
-      this.hide("wonLink");
     },
     methods: {
-      hide: function (element) {
-        var x = document.getElementById(element);
-        if (x.style.display === "none") {
-          x.style.display = "block";
-        } else {
-          x.style.display = "none";
-        }
-      },
-      show: function(element) {
-        var z = document.getElementById(element);
-        if (z.style.display === "block") {
-          z.style.display = "none";
-        } else {
-          z.style.display = "inline";
-        }
-      },
       getAuctions: function() {
         this.$http.get('http://localhost:4941/api/v1/auctions').then(function(response){
           this.auctions = response.data;
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      wonAuctions: function() {
+        this.$http.get('http://localhost:4941/api/v1/auctions?status=won' + this.userId).then(function(response){
+          this.auctionsWon = response.data;
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      getAuctionsSearch: function() {
+        this.$http.get('http://localhost:4941/api/v1/auctions?q=' + this.searchAuctions).then(function(response){
+          this.auctionsWithSearch = response.data;
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
