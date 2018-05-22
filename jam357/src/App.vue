@@ -1,30 +1,12 @@
 <template>
   <div id="app">
-    <img src="./assets/365logo.png" class="center" align="left">
-    <h1>
-      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 50px"><font size="7">Trade365</font></router-link>
-    </h1>
+
     <br/>
 
     <div class="d-flex" id="navigation" style="margin-bottom: 30px">
-      <div class="btn-group">
-        <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="myTrade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          MyTrade365
-        </button>
-        <div class="dropdown-menu dropdown-menu" aria-labelledby="myTrade" style="background-color: rgb(128,128,128)">
-          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Buying</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">In Progress</router-link></a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Selling</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'auctions' }" style="color:white">My Auctions</router-link></a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Profiles</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'user', params: { userId: this.userId } }" style="color:white">My Profile</router-link></a>
-        </div>
-      </div>
+
+      <img src="./assets/365logo.png" class="center" align="left">
+      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 790px"><font size="6">Trade365</font></router-link>
 
       <button id="register" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#createUserModal">Register</button>
       <button id="login" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#loginUserModal">Login</button>
@@ -173,7 +155,7 @@
         error: "",
         errorFlag: false,
         loggedIn: false,
-        userId: 0,
+        userId: "",
         token: "",
         username: "",
         password: "",
@@ -185,7 +167,6 @@
       }
     },
     mounted: function() {
-      this.hide("logout");
       this.hide("registrationGivenNameInvalid");
       this.hide("registrationFamilyNameInvalid");
       this.hide("registrationUsernameInvalid");
@@ -193,6 +174,7 @@
       this.hide("registrationPasswordInvalid");
       this.hide("loginUsernameInvalid");
       this.hide("loginPasswordInvalid");
+      this.initialise();
     },
     methods: {
       hide: function (element) {
@@ -243,8 +225,10 @@
           this.userId = response.data.id;
           localStorage.setItem("userId", response.data.id);
           localStorage.setItem("token", response.data.token);
+          this.token = response.data.token;
           this.username = "";
           this.password = "";
+          this.reload();
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
@@ -255,11 +239,28 @@
         this.show("register");
         this.show("login");
         this.$http({method: 'post', url: 'http://localhost:4941/api/v1/users/logout', headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response) {
-          localStorage.removeItem("token");
+          localStorage.setItem("token", "0");
+          localStorage.setItem("userId", "0");
+          this.reload();
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
         });
+      },
+      initialise: function() {
+        this.token = localStorage.getItem("token");
+        if (this.token.length <= 1) {
+          this.hide("logout");
+          this.show("login");
+          this.show("register");
+        } else {
+          this.show("logout");
+          this.hide("login");
+          this.hide("register");
+        }
+      },
+      reload: function() {
+        location.reload();
       }
     }
   }

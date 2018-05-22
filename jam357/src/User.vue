@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1>User Profile</h1>
-    <div v-if="errorFlag" style="color: red;">
-      {{ error }}
+    <div v-if="errorFlag" style="color: red;"><font size="5">
+      Please log in, go back to the home page and then try view profile again
+    </font>
     </div>
 
     <div v-if="$route.params.userId">

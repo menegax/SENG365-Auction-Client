@@ -3,7 +3,8 @@ import App from './App.vue';
 import Auctions from './Auctions.vue';
 import Auction from './Auction.vue';
 import VueRouter from 'vue-router';
-import User from './User.vue'
+import User from './User.vue';
+import Selling from './Selling.vue';
 
 Vue.use(VueRouter);
 
@@ -42,6 +43,16 @@ const routes = [
     path: "/:status",
     name: "searched",
     component: Auctions
+  },
+  {
+    path: "/:status",
+    name: "inProgress",
+    component: Auctions
+  },
+  {
+    path: "/myAuction",
+    name: "seller",
+    component: Selling
   },
   {
     path: "/:category",

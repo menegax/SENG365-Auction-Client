@@ -8,12 +8,28 @@
       <h1><font size="6">Search auctions</font></h1>
       <form>
         <input v-model="searchAuctions" align="center"/>
-        <router-link :to="{ name: 'searched', params: { status: '0' } }" @click.native="getAuctionsSearch" style="color:WHITE"><font size="4">Search</font></router-link>
+        <router-link :to="{ name: 'searched', params: { status: '0' } }" @click.native="getAuctionsSearch()" style="color:WHITE"><font size="4">Search</font></router-link>
       </form>
       <br>
     </div>
 
-    <h1><font size="6">Auctions</font></h1>
+    <div class="d-flex" style="margin-bottom: 10px">
+      <p style="color:WHITE" id="apparelLabel"><font size="6">Auction category: Apparel</font></p>
+      <p style="color:WHITE" id="equipmentLabel"><font size="6">Auction category: Equipment</font></p>
+      <p style="color:WHITE" id="vehicleLabel"><font size="6">Auction category: Vehicle</font></p>
+      <p style="color:WHITE" id="propertyLabel"><font size="6">Auction category: Property</font></p>
+      <p style="color:WHITE" id="otherLabel"><font size="6">Auction category: Other</font></p>
+
+      <p style="color:WHITE" id="allLabel"><font size="6">All Auctions</font></p>
+      <p style="color:WHITE" id="activeLabel"><font size="6">Active Auctions</font></p>
+      <p style="color:WHITE" id="expiredLabel"><font size="6">Expired Auctions</font></p>
+      <p style="color:WHITE" id="upcomingLabel"><font size="6">Upcoming Auctions</font></p>
+
+      <p style="color:WHITE" id="progressLabel"><font size="6">Your auctions: In Progress</font></p>
+      <p style="color:WHITE" id="wonLabel"><font size="6">Your auctions: Won</font></p>
+      <p style="color:WHITE" id="myAuctionsLabel"><font size="6">Your Auctions: Selling</font></p>
+
+    </div>
 
     <div class="d-flex" style="margin-bottom: 10px">
       <div class="btn-group">
@@ -21,15 +37,15 @@
           Categories
         </button>
         <div class="dropdown-menu" aria-labelledby="categories" style="background-color: rgb(128,128,128)">
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'apparel', params: { category: '1' } }" style="color:white">Apparel</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'apparel', params: { category: '1' } }" style="color:white" @click.native="show('apparelLabel')">Apparel</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'equipment', params: { category: '2' } }" style="color:white">Equipment</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'equipment', params: { category: '2' } }" style="color:white" @click.native="show('equipmentLabel')">Equipment</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'vehicle', params: { category: '3' } }" style="color:white">Vehicles</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'vehicle', params: { category: '3' } }" style="color:white" @click.native="show('vehicleLabel')">Vehicles</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'property', params: { category: '4' } }" style="color:white">Property</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'property', params: { category: '4' } }" style="color:white" @click.native="show('propertyLabel')">Property</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'other', params: { category: '5' } }" style="color:white">Other</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'other', params: { category: '5' } }" style="color:white" @click.native="show('otherLabel')">Other</router-link></a>
         </div>
       </div>
       <div class="btn-group">
@@ -37,15 +53,32 @@
           Status
         </button>
         <div class="dropdown-menu" aria-labelledby="status" style="background-color: rgb(128,128,128)">
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'allAuctions', params: { status: '1' } }" style="color:white">All</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'allAuctions', params: { status: '1' } }" style="color:white" @click.native="show('allLabel')">All</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'active' }" style="color:white">Active</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'active' }" style="color:white" @click.native="show('activeLabel')">Active</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'expired', params: { status: '2' } }" style="color:white">Expired</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'expired', params: { status: '2' } }" style="color:white" @click.native="show('expiredLabel')">Expired</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'upcoming', params: { status: '3' } }" style="color:white">Upcoming</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'upcoming', params: { status: '3' } }" style="color:white" @click.native="show('upcomingLabel')">Upcoming</router-link></a>
+        </div>
+      </div>
+      <div class="btn-group" id="myTrade365">
+        <button type="button" class="btn btn-secondary btn dropdown-toggle" id="myTrade" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          MyTrade365
+        </button>
+        <div class="dropdown-menu dropdown-menu" aria-labelledby="myTrade" style="background-color: rgb(128,128,128)">
+          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Buying</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" style="color: white" id="wonLink"><router-link :to="{ name: 'won', params: { status: '4' } }" style="color:white" @click.native="wonAuctions()">Won</router-link></a>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'inProgress', params: { status: '5', userId: this.userId } }" style="color:white" @click.native="getBidderAuctions()">In Progress,</router-link></a>
+          <a class="dropdown-item" style="color: white" id="wonLink"><router-link :to="{ name: 'won', params: { status: '4' } }" style="color:white" @click.native="wonAuctions()"> Won</router-link></a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Selling</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'seller' }" style="color:white" @click.native="getMyAuctions()">My Auctions</router-link></a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" style="color: rgb(117, 57, 141)">Profiles</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'user', params: { userId: this.userId } }" style="color:white">My Profile</router-link></a>
         </div>
       </div>
     </div>
@@ -83,7 +116,8 @@
         <div v-for="auction in auctions">
           <div v-if="auction.categoryId === 4" id="auctionsProperty">
             <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
-          </div>
+          </div>          <a style="color: white"></a>
+
         </div>
       </div>
     </div>
@@ -137,7 +171,27 @@
     <div v-else-if="$route.params.status === '4'">
       <div id="won">
         <div v-for="auction in auctionsWon">
-          <div v-if="auction.id === this.userId" id="auctionsWon">
+          <div v-if="auction.endDateTime <= new Date()" id="auctionsWon">
+            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="$route.params.status === '5'">
+      <div id="inProgress">
+        <div v-for="auction in auctionsBidOn">
+          <div v-if="auction.endDateTime >= new Date()" id="auctionsBid">
+            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="$route.params.status === '6'">
+      <div id="seller">
+        <div v-for="auction in auctionsMine">
+          <div id="auctionsMine">
             <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
@@ -166,15 +220,49 @@
         auctions: [],
         auctionsWon: [],
         auctionsWithSearch: [],
+        auctionsBidOn: [],
+        auctionsMine: [],
         auction: null,
         searchAuctions: "",
-        userId: localStorage.getItem("userId")
+        userId: localStorage.getItem("userId"),
+        label: localStorage.getItem("label"),
+        token: localStorage.getItem("token"),
       }
     },
     mounted: function() {
       this.getAuctions();
+      this.hide("apparelLabel");
+      this.hide("equipmentLabel");
+      this.hide("vehicleLabel");
+      this.hide("propertyLabel");
+      this.hide("otherLabel");
+      this.hide("allLabel");
+      this.hide("expiredLabel");
+      this.hide("upcomingLabel");
+      this.hide("progressLabel");
+      this.hide("wonLabel");
+      this.hide("myAuctionsLabel");
+      this.initialise();
     },
     methods: {
+      hide: function (element) {
+        var x = document.getElementById(element);
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+      },
+      show: function(element) {
+        this.hide(this.label);
+        var z = document.getElementById(element);
+        this.label = element;
+        if (z.style.display === "block") {
+          z.style.display = "none";
+        } else {
+          z.style.display = "inline";
+        }
+      },
       getAuctions: function() {
         this.$http.get('http://localhost:4941/api/v1/auctions').then(function(response){
           this.auctions = response.data;
@@ -184,7 +272,8 @@
         });
       },
       wonAuctions: function() {
-        this.$http.get('http://localhost:4941/api/v1/auctions?status=won' + this.userId).then(function(response){
+        this.show("wonLabel");
+        this.$http.get('http://localhost:4941/api/v1/auctions?status=won&bidder=' + this.userId).then(function(response){
           this.auctionsWon = response.data;
         }, function(error) {
           this.error = error;
@@ -198,6 +287,30 @@
           this.error = error;
           this.errorFlag = true;
         });
+      },
+      getBidderAuctions: function() {
+        this.show("progressLabel");
+        this.$http.get('http://localhost:4941/api/v1/auctions?bidder=' + this.userId).then(function(response){
+          this.auctionsBidOn = response.data;
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      getMyAuctions: function() {
+        this.show("progressLabel");
+        this.$http.get('http://localhost:4941/api/v1/auctions?seller=' + this.userId).then(function(response){
+          this.auctionsMine = response.data;
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      initialise: function() {
+        this.token = localStorage.getItem("token");
+        if (this.token.length <= 1) {
+          this.hide('myTrade');
+        }
       }
     }
   }
@@ -205,7 +318,7 @@
 
 <style>
   #auctions, #auctionsApparel, #auctionsEquipment, #auctionsVehicle, #auctionsProperty, #auctionsOther, #auctionsActive,
-  #auctionsExpired, #auctionsUpcoming, #auctionsWon, #auctionsSearched {
+  #auctionsExpired, #auctionsUpcoming, #auctionsWon, #auctionsSearched, #auctionsBid, #auctionsMine {
     float: left;
     background-color: rgba(128, 128, 128, 0.5);
     height: 200px;
