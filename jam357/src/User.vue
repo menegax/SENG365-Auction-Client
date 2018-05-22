@@ -6,7 +6,7 @@
     </font>
     </div>
 
-    <div v-if="$route.params.userId">
+    <div v-if="$route.params.userId === this.userId">
       <div id="user" v-for="user in users">
         <br>
 
@@ -18,7 +18,14 @@
 
         <button id="edit" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#editUserModal"
                 style="background-color: rgba(255, 255, 255, 0)"><font size="6">Edit User</font></button>
+      </div>
+    </div>
 
+    <div v-else>
+      <div id="otherUser" v-for="user in users">
+        <p><font size="5">{{ "Username: " + user.username }}</font></p>
+        <p><font size="5">{{ "Given Name: " + user.givenName }}</font></p>
+        <p><font size="5">{{ "Family Name: " + user.familyName }}</font></p>
       </div>
     </div>
 
@@ -72,7 +79,8 @@
         errorFlag: false,
         users: [],
         editGivenName: "",
-        editFamilyName: ""
+        editFamilyName: "",
+        userId: localStorage.getItem('userId')
       }
     },
     mounted: function() {
@@ -80,6 +88,7 @@
     },
     methods: {
       getUser: function(){
+        console.log(localStorage.getItem("userId"));
         this.$http({method: "get", url:'http://localhost:4941/api/v1/users/' + this.$route.params.userId, headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response){
           this.users = [response.data];
           this.editGivenName = response.data.givenName;
@@ -111,5 +120,13 @@
     height: 300px;
     width: 1164px;
     margin-bottom: 10px;
+  }
+
+  #otherUser {
+    background-color: rgba(128, 128, 128, 0.5);
+    width: 500px;
+    margin-bottom: 10px;
+    margin-right: auto;
+    margin-left: auto;
   }
 </style>

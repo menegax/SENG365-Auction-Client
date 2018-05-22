@@ -2,6 +2,7 @@
   <div>
     <div v-if="errorFlag" style="color: red;">
       {{ error }}
+      <!--<h3>No auctions found</h3>-->
     </div>
 
     <div align="center" style="margin-bottom: 10px">
@@ -116,8 +117,7 @@
         <div v-for="auction in auctions">
           <div v-if="auction.categoryId === 4" id="auctionsProperty">
             <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
-          </div>          <a style="color: white"></a>
-
+          </div>
         </div>
       </div>
     </div>
@@ -140,7 +140,7 @@
       </div>
     </div>
 
-    <div v-else  v-else-if="$route.params.status === '1'">
+    <div v-else-if="$route.params.status === '1'">
       <div id="allAuctions">
         <div id="auctions" v-for="auction in auctions">
           <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
@@ -273,7 +273,12 @@
       },
       wonAuctions: function() {
         this.show("wonLabel");
-        this.$http.get('http://localhost:4941/api/v1/auctions?status=won&bidder=' + this.userId).then(function(response){
+        console.log(localStorage.getItem("token"));
+        this.$http.get('http://localhost:4941/api/v1/my_won_auctions', {
+          headers: {
+            'X-Authorization': localStorage.getItem("token")
+          }
+        }).then(function(response){
           this.auctionsWon = response.data;
         }, function(error) {
           this.error = error;

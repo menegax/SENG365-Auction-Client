@@ -43,7 +43,7 @@
 
       <div id="auctionView" v-for="auction in auctions">
         <p><font size="5">{{ "Category title: " + auction.categoryTitle }}</font></p>
-        <p><font size="5">{{ "Auction seller: " + auction.seller.username }}</font></p>
+        <p><router-link :to="{ name: 'otherUser', params: { userId: auction.seller.id } }" style="color:WHITE"><font size="5">{{ "Auction seller: " + auction.seller.username }}</font></router-link></p>
         <p><font size="5">{{ "Auction title: " + auction.title }}</font></p>
         <p><font size="5">{{ "Description: " + auction.description }}</font></p>
         <p><font size="5">{{ "Auction starting date time: " + new Date(auction.startDateTime).toLocaleDateString() + " " + new Date(auction.startDateTime).toLocaleTimeString() }}</font></p>

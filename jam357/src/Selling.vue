@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="errorFlag" style="color: red;">
-      {{ error }}
+      <h3>Sorry your fields you entered were invalid</h3>
     </div>
 
       <p style="color:WHITE" id="apparelLabel"><font size="6">Auction category: Apparel</font></p>
@@ -15,9 +15,9 @@
       <p style="color:WHITE" id="expiredLabel"><font size="6">Expired Auctions</font></p>
       <p style="color:WHITE" id="upcomingLabel"><font size="6">Upcoming Auctions</font></p>
 
-      <p style="color:WHITE" id="progressLabel"><font size="6">Your auctions: In Progress</font></p>
-      <p style="color:WHITE" id="wonLabel"><font size="6">Your auctions: Won</font></p>
-      <p style="color:WHITE" id="myAuctionsLabel"><font size="6">Your Auctions: Selling</font></p>
+      <p style="color:WHITE" id="progressLabel"><font size="6">My auctions in progress</font></p>
+      <p style="color:WHITE" id="wonLabel"><font size="6">My auctions won</font></p>
+      <p style="color:WHITE" id="myAuctionsLabel"><font size="6">My Auctions:</font></p>
 
 
     <div class="d-flex" style="margin-bottom: 10px">
@@ -25,15 +25,20 @@
         <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Filter
         </button>
-        <div class="dropdown-menu dropdown-menu" aria-labelledby="filter" style="background-color: rgb(128,128,128)">
-          <input class="form-check-input" type="checkbox" value="" id="expired" @click="check()">
+        <div id="dropdown" class="dropdown-menu dropdown-menu" aria-labelledby="filter" style="background-color: rgb(128,128,128)">
+          <input class="form-check-input" type="radio" value="" id="expired" @click="check()" name="radio">
           <label class="form-check-label" for="expired">
             Expired auctions
           </label>
           <br>
-          <input class="form-check-input" type="checkbox" value="" id="winner" disabled @click="check()">
+          <input class="form-check-input" type="radio" value="" id="winner" @click="check()" name="radio">
           <label class="form-check-label" for="winner">
             Auctions with a winner
+          </label>
+          <br>
+          <input class="form-check-input" type="radio" value="" id="inProgress" @click="check()" name="radio">
+          <label class="form-check-label" for="inProgress">
+            Auctions still in progress
           </label>
         </div>
       </div>
@@ -89,7 +94,7 @@
                 <div class="form-group">
                   <label class="control-label col-sm-3">Auction category:</label>
                   <div class="col-sm-9">
-                    <select name="categoryId" id="categories">
+                    <select name="categoryId" id="categoryId">
                       <option value="1">1. Apparel</option>
                       <option value="2">2. Equipment</option>
                       <option value="3">3. Vehicles</option>
@@ -204,15 +209,6 @@
         this.$http.get('http://localhost:4941/api/v1/auctions?status=expired&seller=' + this.userId).then(function(response){
           this.auctionsMine = [];
           this.auctionsMine = response.data;
-          this.getMyAuctionsWon();
-        }, function(error) {
-          this.error = error;
-          this.errorFlag = true;
-        });
-      },
-      getMyAuctionsWon: function() {
-        this.$http.get('http://localhost:4941/api/v1/auctions?status=won&seller=' + this.userId).then(function(response){
-          this.auctionsMine.push.apply(this.auctionsMine, response.data);
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
@@ -227,8 +223,17 @@
           this.errorFlag = true;
         });
       },
+      getMyAuctionsInProgress: function() {
+        this.$http.get('http://localhost:4941/api/v1/auctions?status=active&seller=' + this.userId).then(function(response){
+          this.auctionsMine = [];
+          this.auctionsMine = response.data;
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
       createAuction: function(){
-        this.$http.post('http://localhost:4941/api/v1/auctions', JSON.stringify({
+        this.$http({method: 'post', url: 'http://localhost:4941/api/v1/auctions', headers: { 'X-Authorization': localStorage.getItem("token") }, body: JSON.stringify({
           categoryId: this.categoryId,
           title: this.title,
           description: this.description,
@@ -236,7 +241,7 @@
           endDateTime: this.endDate,
           reservePrice: this.reservePrice,
           startingBid: this.startingBid
-        })).then(function(response){
+        })}).then(function(response){
 
         }, function(error) {
           this.error = error;
@@ -246,13 +251,19 @@
       check: function() {
         if (document.getElementById("winner").checked) {
           this.getMyAuctionsOnlyWon();
+          // document.getElementById("expired").checked = false;
+          // document.getElementById("inProgress").checked = false;
         }
         else if (document.getElementById("expired").checked) {
           this.getMyAuctionsExpired();
-          document.getElementById("winner").disabled = false;
+          // document.getElementById("inProgress").checked = false;
+          // document.getElementById("winner").checked = false;
+        } else if (document.getElementById("inProgress").checked) {
+          this.getMyAuctionsInProgress();
+          // document.getElementById("expired").checked = false;
+          // document.getElementById("winner").checked = false;
         } else {
           this.getMyAuctions();
-          document.getElementById("winner").disabled = true;
         }
       }
     }
@@ -268,11 +279,11 @@
     margin-bottom: 10px;
   }
 
-  .dropdown-menu {
-    width: 180px;
+  #dropdown {
+    width: 200px;
   }
 
-  #categories {
+  #categoryId {
     width: 535px;
     margin-right: 140px
   }

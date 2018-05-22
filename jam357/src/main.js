@@ -93,34 +93,12 @@ const routes = [
     path: "/user/:userId",
     name: "user",
     component: User
+  },
+  {
+    path: "/user/:userId",
+    name: "otherUser",
+    component: User
   }
-
-
-  // {
-  //   path: "/apparel",
-  //   name: "apparel",
-  //   component: Apparel
-  // },
-  // {
-  //   path: "/equipment",
-  //   name: "equipment",
-  //   component: Equipment
-  // },
-  // {
-  //   path: "/vehicle",
-  //   name: "vehicle",
-  //   component: Vehicle
-  // },
-  // {
-  //   path: "/property",
-  //   name: "property",
-  //   component: Property
-  // },
-  // {
-  //   path: "/other",
-  //   name: "other",
-  //   component: Other
-  // }
 ];
 
 const router = new VueRouter({
