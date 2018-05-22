@@ -6,7 +6,7 @@
     <div class="d-flex" id="navigation" style="margin-bottom: 30px">
 
       <img src="./assets/365logo.png" class="center" align="left">
-      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 790px"><font size="6">Trade365</font></router-link>
+      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 780px"><font size="6">Trade365</font></router-link>
 
       <button id="register" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#createUserModal">Register</button>
       <button id="login" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#loginUserModal">Login</button>

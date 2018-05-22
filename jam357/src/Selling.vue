@@ -21,8 +21,8 @@
 
 
     <div class="d-flex" style="margin-bottom: 10px">
-      <div class="btn-group" id="filterSelling">
-        <button type="button" class="btn btn-secondary btn dropdown-toggle" id="filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div class="btn-group pull-left" id="filterSelling">
+        <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Filter
         </button>
         <div class="dropdown-menu dropdown-menu" aria-labelledby="filter" style="background-color: rgb(128,128,128)">
@@ -35,6 +35,96 @@
           <label class="form-check-label" for="winner">
             Auctions with a winner
           </label>
+        </div>
+      </div>
+
+      <button id="bid" type="button" class="btn btn-secondary btn-lg pull-right" data-toggle="modal" data-target="#createAuctionModal" style="margin-right: 15px; margin-bottom: 5px">+</button>
+
+    </div>
+
+    <div>
+      <div class="modal fade" id="createAuctionModal" tabindex="-1" role="dialog" aria-labelledby="createAuctionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createAuctionModalLabel"><font size="5">Create new auction</font></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-3">Auction title:</label>
+                  <div class="col-sm-9">
+                    <input class="col-lg-10" id="title" placeholder="Enter Title" v-model="title">
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-3">Auction description:</label>
+                  <div class="col-sm-9">
+                    <input class="col-lg-10" id="description" placeholder="Enter description" v-model="description">
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-3">Auction start date:</label>
+                  <div class="col-sm-9">
+                    <input class="col-lg-10" type="date" id="startDate" v-model="startDate">
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-3">Auction end date:</label>
+                  <div class="col-sm-9">
+                    <input class="col-lg-10" type="date" id="endDate" v-model="endDate">
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-3">Auction category:</label>
+                  <div class="col-sm-9">
+                    <select name="categoryId" id="categories">
+                      <option value="1">1. Apparel</option>
+                      <option value="2">2. Equipment</option>
+                      <option value="3">3. Vehicles</option>
+                      <option value="4">4. Property</option>
+                      <option value="5">5. Other</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-3">Auction reserve price:</label>
+                  <div class="col-sm-9">
+                    <input class="col-lg-10" id="reservePrice" placeholder="Enter reserve price" v-model="reservePrice">
+                  </div>
+                </div>
+              </form>
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-3">Auction starting bid:</label>
+                  <div class="col-sm-9">
+                    <input class="col-lg-10" id="startingBid" placeholder="Enter starting price" v-model="startingBid">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="createAuction()">
+                Create
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -60,6 +150,13 @@
         userId: localStorage.getItem("userId"),
         label: localStorage.getItem("label"),
         token: localStorage.getItem("token"),
+        title: "",
+        description: "",
+        startDate: "",
+        endDate: "",
+        categoryId: "",
+        reservePrice: 0,
+        startingBid: 0
       }
     },
     mounted: function() {
@@ -130,6 +227,22 @@
           this.errorFlag = true;
         });
       },
+      createAuction: function(){
+        this.$http.post('http://localhost:4941/api/v1/auctions', JSON.stringify({
+          categoryId: this.categoryId,
+          title: this.title,
+          description: this.description,
+          startDateTime: this.startDate,
+          endDateTime: this.endDate,
+          reservePrice: this.reservePrice,
+          startingBid: this.startingBid
+        })).then(function(response){
+
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        })
+      },
       check: function() {
         if (document.getElementById("winner").checked) {
           this.getMyAuctionsOnlyWon();
@@ -157,5 +270,10 @@
 
   .dropdown-menu {
     width: 180px;
+  }
+
+  #categories {
+    width: 535px;
+    margin-right: 140px
   }
 </style>

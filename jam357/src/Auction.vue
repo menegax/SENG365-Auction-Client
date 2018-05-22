@@ -3,8 +3,43 @@
       <h1>
         <router-link :to="{ name: 'active' }" style="color:WHITE"><font size="6">Back to auctions</font></router-link>
       </h1>
-
       <br /><br />
+
+      <button id="bid" type="button" class="btn btn-secondary btn" data-toggle="modal" data-target="#createBidModal">Bid on this auction</button>
+      <br /><br />
+
+      <div>
+        <div class="modal fade" id="createBidModal" tabindex="-1" role="dialog" aria-labelledby="createBidModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="createBidModalLabel" v-for="auction in auctions"><font size="5">{{ "Bid on auction: " + auction.title }}</font></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <label class="control-label col-sm-3">Amount:</label>
+                    <div class="col-sm-9">
+                      <input class="col-lg-10" id="amount" v-model="amount">
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Close
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="createBid()">
+                  Bid
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div id="auctionView" v-for="auction in auctions">
         <p><font size="5">{{ "Category title: " + auction.categoryTitle }}</font></p>
@@ -37,14 +72,35 @@
         error: "",
         errorFlag: false,
         auctions: [],
-        bids: []
+        bids: [],
+        amount: "",
+        token: localStorage.getItem("token")
       }
     },
     mounted: function() {
       this.getAuction();
       this.getBids();
+      this.initialise();
     },
     methods: {
+      hide: function (element) {
+        var x = document.getElementById(element);
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+      },
+      show: function(element) {
+        this.hide(this.label);
+        var z = document.getElementById(element);
+        this.label = element;
+        if (z.style.display === "block") {
+          z.style.display = "none";
+        } else {
+          z.style.display = "inline";
+        }
+      },
       getAuction: function(){
         this.$http.get('http://localhost:4941/api/v1/auctions/' + this.$route.params.auctionId).then(function(response){
           this.auctions = [response.data];
@@ -60,6 +116,21 @@
           this.error = error;
           this.errorFlag = true;
         });
+      },
+      createBid: function() {
+        this.$http({method: 'post', url: 'http://localhost:4941/api/v1/auctions/' + this.$route.params.auctionId + '/bids?amount=' + this.amount, headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response){
+          this.getBids();
+          this.getAuction();
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      initialise: function() {
+        this.token = localStorage.getItem("token");
+        if (this.token.length <= 1) {
+          this.hide('bid');
+        }
       }
     }
   }
