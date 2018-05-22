@@ -112,6 +112,7 @@
       getBids: function(){
         this.$http.get('http://localhost:4941/api/v1/auctions/' + this.$route.params.auctionId + '/bids').then(function(response){
           this.bids = response.data;
+          this.bids.reverse();
         }, function(error) {
           this.error = error;
           this.errorFlag = true;

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
 
+
     <br/>
 
     <div class="d-flex" id="navigation" style="margin-bottom: 30px">
@@ -11,6 +12,17 @@
       <button id="register" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#createUserModal">Register</button>
       <button id="login" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#loginUserModal">Login</button>
       <button id="logout" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#logoutUserModal">Logout</button>
+    </div>
+
+    <div v-if="errorFlagLogin" style="color: red;">
+      Incorrect user credentials
+    </div>
+
+    <div v-if="errorFlagLogout" style="color: red;">
+      Failed to logout
+    </div>
+    <div v-if="errorFlagRegistration" style="color: red;">
+      Invalid fields, could not register user
     </div>
 
     <div>
@@ -154,6 +166,9 @@
       return {
         error: "",
         errorFlag: false,
+        errorFlagRegistration: false,
+        errorFlagLogin: false,
+        errorFlagLogout: false,
         loggedIn: false,
         userId: "",
         token: "",
@@ -211,18 +226,21 @@
           this.registrationPassword = "";
         }, function(error) {
           this.error = error;
-          this.errorFlag = true;
+          this.errorFlagRegistration = true;
+          this.errorFlag = false;
+          this.errorFlagLogin = false;
+          this.errorFlagLogout = false;
         });
       },
       login: function() {
-        this.hide("register");
-        this.hide("login");
-        this.show("logout");
         this.$http.post('http://localhost:4941/api/v1/users/login', JSON.stringify({
           username: this.username,
           password: this.password
         })).then(function(response) {
           this.userId = response.data.id;
+          this.hide("register");
+          this.hide("login");
+          this.show("logout");
           localStorage.setItem("userId", response.data.id);
           localStorage.setItem("token", response.data.token);
           this.token = response.data.token;
@@ -231,7 +249,10 @@
           this.reload();
         }, function(error) {
           this.error = error;
-          this.errorFlag = true;
+          this.errorFlagLogin = true;
+          this.errorFlag = false;
+          this.errorFlagLogout = false;
+          this.errorFlagRegistration = false;
         });
       },
       logout: function() {
@@ -239,17 +260,22 @@
         this.show("register");
         this.show("login");
         this.$http({method: 'post', url: 'http://localhost:4941/api/v1/users/logout', headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response) {
-          localStorage.setItem("token", "0");
+          // localStorage.setItem("token", "0");
+          localStorage.removeItem("token");
           localStorage.setItem("userId", "0");
           this.reload();
         }, function(error) {
           this.error = error;
-          this.errorFlag = true;
+          this.errorFlagLogout = true;
+          this.errorFlag = false;
+          this.errorFlagLogin = false;
+          this.errorFlagRegistration = false;
         });
       },
       initialise: function() {
-        this.token = localStorage.getItem("token");
-        if (this.token.length <= 1) {
+        // this.token = localStorage.getItem("token");
+        // this.token.length <= 1
+        if (localStorage.getItem("token") == undefined) {
           this.hide("logout");
           this.show("login");
           this.show("register");
