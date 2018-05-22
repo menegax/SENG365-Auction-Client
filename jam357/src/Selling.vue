@@ -21,8 +21,22 @@
 
 
     <div class="d-flex" style="margin-bottom: 10px">
-      <router-link :to="{ name: 'seller'}" style="color:white"><font size="5">All</font></router-link>
-      <router-link :to="{ name: 'seller'}" style="color:white"><font size="5">All</font></router-link>
+      <div class="btn-group" id="filterSelling">
+        <button type="button" class="btn btn-secondary btn dropdown-toggle" id="filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Filter
+        </button>
+        <div class="dropdown-menu dropdown-menu" aria-labelledby="filter" style="background-color: rgb(128,128,128)">
+          <input class="form-check-input" type="checkbox" value="" id="expired" @click="check()">
+          <label class="form-check-label" for="expired">
+            Expired auctions
+          </label>
+          <br>
+          <input class="form-check-input" type="checkbox" value="" id="winner" disabled @click="check()">
+          <label class="form-check-label" for="winner">
+            Auctions with a winner
+          </label>
+        </div>
+      </div>
     </div>
 
     <div id="seller">
@@ -88,6 +102,45 @@
           this.error = error;
           this.errorFlag = true;
         });
+      },
+      getMyAuctionsExpired: function() {
+        this.$http.get('http://localhost:4941/api/v1/auctions?status=expired&seller=' + this.userId).then(function(response){
+          this.auctionsMine = [];
+          this.auctionsMine = response.data;
+          this.getMyAuctionsWon();
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      getMyAuctionsWon: function() {
+        this.$http.get('http://localhost:4941/api/v1/auctions?status=won&seller=' + this.userId).then(function(response){
+          this.auctionsMine.push.apply(this.auctionsMine, response.data);
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      getMyAuctionsOnlyWon: function() {
+        this.$http.get('http://localhost:4941/api/v1/auctions?status=won&seller=' + this.userId).then(function(response){
+          this.auctionsMine = [];
+          this.auctionsMine = response.data;
+        }, function(error) {
+          this.error = error;
+          this.errorFlag = true;
+        });
+      },
+      check: function() {
+        if (document.getElementById("winner").checked) {
+          this.getMyAuctionsOnlyWon();
+        }
+        else if (document.getElementById("expired").checked) {
+          this.getMyAuctionsExpired();
+          document.getElementById("winner").disabled = false;
+        } else {
+          this.getMyAuctions();
+          document.getElementById("winner").disabled = true;
+        }
       }
     }
   }
@@ -100,5 +153,9 @@
     height: 200px;
     width: 1164px;
     margin-bottom: 10px;
+  }
+
+  .dropdown-menu {
+    width: 180px;
   }
 </style>

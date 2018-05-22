@@ -55,6 +55,11 @@ const routes = [
     component: Selling
   },
   {
+    path: "/myAuction/:status",
+    name: "sellerExpired",
+    component: Selling
+  },
+  {
     path: "/:category",
     name: "apparel",
     component: Auctions
