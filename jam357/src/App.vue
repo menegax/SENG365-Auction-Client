@@ -1,18 +1,12 @@
 <template>
   <div id="app">
-
-
-    <br/>
-
-    <div class="d-flex" id="navigation" style="margin-bottom: 30px">
-
+    <ul>
       <img src="./assets/365logo.png" class="center" align="left">
-      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 1000px"><font size="6">Trade365</font></router-link>
-
-      <button id="register" type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#createUserModal">Register</button>
-      <button id="login" type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#loginUserModal">Login</button>
-      <button id="logout" type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#logoutUserModal">Logout</button>
-    </div>
+      <li><router-link :to="{ name: 'active' }"><font size="4">Trade365</font></router-link></li>
+      <li id="register"><a data-toggle="modal" data-target="#createUserModal"><font size="4">Register</font></a></li>
+      <li id="login"><a data-toggle="modal" data-target="#loginUserModal"><font size="4">Login</font></a></li>
+      <li id="logout"><a data-toggle="modal" data-target="#logoutUserModal"><font size="4">Logout</font></a></li>
+    </ul>
 
     <div v-if="errorFlagLogin" style="color: red;">
       Incorrect user credentials
@@ -100,7 +94,7 @@
             <div class="modal-body">
               <form class="form-horizontal">
                 <div class="form-group">
-                  <label class="control-label col-sm-2">Username:</label>
+                  <label class="control-label col-sm-2">User/Email:</label>
                   <div class="col-sm-9">
                     <input class="col-lg-10" id="username" v-model="username">
                     <p class="text-warning" id="loginUsernameInvalid" align="center">*INVALID*</p>
@@ -154,6 +148,8 @@
       </div>
     </div>
 
+
+
     </div>
 
     <router-view></router-view>
@@ -173,12 +169,13 @@
         userId: "",
         token: "",
         username: "",
+        email: "",
         password: "",
         registrationGivenName: "",
         registrationFamilyName: "",
         registrationUsername: "",
         registrationEmail: "",
-        registrationPassword: "",
+        registrationPassword: ""
       }
     },
     mounted: function() {
@@ -233,8 +230,13 @@
         });
       },
       login: function() {
+        if (this.username.indexOf('@') > -1) {
+          this.email = this.username;
+          this.username = "";
+        }
         this.$http.post('http://localhost:4941/api/v1/users/login', JSON.stringify({
           username: this.username,
+          email: this.email,
           password: this.password
         })).then(function(response) {
           this.userId = response.data.id;
@@ -246,6 +248,7 @@
           this.token = response.data.token;
           this.username = "";
           this.password = "";
+          this.email = "";
           this.reload();
         }, function(error) {
           this.error = error;
@@ -302,73 +305,61 @@
   }
 
   body {
-    margin-left: 250px;
-    margin-right: 250px;
     background-color: BLACK;
+    font-family: "Lato", sans-serif;
   }
 
   h1, h2 {
     font-weight: normal;
     margin-right: auto;
     margin-left: auto;
+    font-family: "Lato", sans-serif;
   }
 
   ul {
     list-style-type: none;
+    margin: 0;
     padding: 0;
+    overflow: hidden;
+    background-color: #767676;
+    font-family: "Lato", sans-serif;
   }
 
   li {
-    display: inline-block;
-    margin: 0 10px;
+    font-family: "Lato", sans-serif;
+    float: left;
   }
 
-  a {
-    color: #42b983;
-  }
-
-  table {
-    padding: 700px;
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  td, th {
-    border: 1px solid #dddddd;
+  li a {
+    display: block;
+    color: black;
     text-align: center;
-    padding: 8px;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: "Lato", sans-serif;
   }
 
-  th {
-    background-color: #f8f8ff;
-  }
-
-  tr:nth-child(even) {
-    background-color: #dddddd;
-  }
-
-  tr:nth-child(odd) {
-    background-color: #f8f8ff;
-  }
-
-  tr:hover {
-    background-color: rgba(147, 112, 219, 0.44);
+  li a:hover {
+    background-color: #111;
   }
 
   button {
     color: BLACK;
+    font-family: "Lato", sans-serif;
   }
 
   input {
     color: rgb(81, 81, 81);
+    font-family: "Lato", sans-serif;
   }
 
   .modal-header {
     background-color: rgba(128, 128, 128, 0.65);
+    font-family: "Lato", sans-serif;
   }
 
   .modal-body {
     color: rgb(81, 81, 81);
+    font-family: "Lato", sans-serif;
   }
 </style>

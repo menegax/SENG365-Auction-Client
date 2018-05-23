@@ -4,6 +4,14 @@
       <h3>Sorry your fields you entered were invalid</h3>
     </div>
 
+    <div v-if="errorFlagCreate" style="color: red;">
+      <h3>Sorry your fields you entered were invalid</h3>
+    </div>
+
+    <div v-if="errorFlagPostPhoto" style="color: red;">
+      <h3>Please attempt to upload a .png or .jpeg</h3>
+    </div>
+
       <p style="color:WHITE" id="apparelLabel"><font size="6">Auction category: Apparel</font></p>
       <p style="color:WHITE" id="equipmentLabel"><font size="6">Auction category: Equipment</font></p>
       <p style="color:WHITE" id="vehicleLabel"><font size="6">Auction category: Vehicle</font></p>
@@ -19,7 +27,7 @@
       <p style="color:WHITE" id="wonLabel"><font size="6">My auctions won</font></p>
       <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'seller' }" style="color:white" @click.native="getMyAuctions()"><font size="7">My auctions</font></router-link></a>
 
-    <div class="d-flex" style="margin-bottom: 10px">
+    <div class="d-flex" style="margin-bottom: 10px; margin-left: 255px">
       <div class="btn-group pull-left" id="filterSelling">
         <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" id="filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Filter
@@ -42,7 +50,7 @@
         </div>
       </div>
 
-      <button id="bid" type="button" class="btn btn-secondary btn-lg pull-right" data-toggle="modal" data-target="#createAuctionModal" style="margin-right: auto">+</button>
+      <button id="bid" type="button" class="btn btn-secondary btn-lg pull-right" data-toggle="modal" data-target="#createAuctionModal" style="margin-right: 255px">+</button>
       <br />
       <br />
     </div>
@@ -120,6 +128,13 @@
                   </div>
                 </div>
               </form>
+              <form class="form-inline">
+                <div class="form-group">
+                  <label for="postPhoto" class="control-label col-3">Choose .png or .jpeg file: </label>
+                  <input class="form-control" type="file" id="postPhoto" style="width: 540px; margin-left: 25px; margin-right: 80px">
+                </div>
+              </form>
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -145,6 +160,9 @@
       </div>
     </div>
 
+    <button id="pageback" type="button" class="btn btn-secondary btn" style="margin-bottom: 20px" v-on:click="back()">Back</button>
+    <button id="pageNext" type="button" class="btn btn-secondary btn" style="margin-bottom: 20px" v-on:click="next()">Next</button>
+
   </div>
 </template>
 
@@ -154,17 +172,24 @@
       return {
         error: "",
         errorFlag: false,
+        errorFlagCreate: false,
+        errorFlagPostPhoto: false,
         auctionsMine: [],
         userId: localStorage.getItem("userId"),
         label: localStorage.getItem("label"),
         token: localStorage.getItem("token"),
         title: "",
         description: "",
-        startDate: "",
-        endDate: "",
+        startDate: new Date().toISOString().substr(0,16),
+        endDate: new Date().toISOString().substr(0,16),
         categoryId: "",
-        reservePrice: 0,
-        startingBid: 0
+        reservePrice: "0",
+        startingBid: "0",
+        auctionId: 0,
+        startIndex: 0,
+        count: 3,
+        currentId: '0',
+        globalAuctions: []
       }
     },
     mounted: function() {
@@ -205,7 +230,8 @@
           document.getElementById("inProgress").checked = false;
           document.getElementById("winner").checked = false;
           document.getElementById("expired").checked = false;
-          this.auctionsMine = response.data;
+          this.globalAuctions = response.data;
+          this.auctionsMine = response.data.slice(this.startIndex, this.count);
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
@@ -214,8 +240,8 @@
       getMyAuctionsExpired: function() {
         this.$http.get('http://localhost:4941/api/v1/auctions?status=expired&seller=' + this.userId).then(function(response){
           this.auctionsMine = [];
-          this.auctionsMine = response.data;
-        }, function(error) {
+          this.globalAuctions = response.data;
+          this.auctionsMine = response.data.slice(this.startIndex, this.count);        }, function(error) {
           this.error = error;
           this.errorFlag = true;
         });
@@ -223,8 +249,8 @@
       getMyAuctionsOnlyWon: function() {
         this.$http.get('http://localhost:4941/api/v1/auctions?status=won&seller=' + this.userId).then(function(response){
           this.auctionsMine = [];
-          this.auctionsMine = response.data;
-        }, function(error) {
+          this.globalAuctions = response.data;
+          this.auctionsMine = response.data.slice(this.startIndex, this.count);        }, function(error) {
           this.error = error;
           this.errorFlag = true;
         });
@@ -232,8 +258,8 @@
       getMyAuctionsInProgress: function() {
         this.$http.get('http://localhost:4941/api/v1/auctions?status=active&seller=' + this.userId).then(function(response){
           this.auctionsMine = [];
-          this.auctionsMine = response.data;
-        }, function(error) {
+          this.globalAuctions = response.data;
+          this.auctionsMine = response.data.slice(this.startIndex, this.count);        }, function(error) {
           this.error = error;
           this.errorFlag = true;
         });
@@ -245,25 +271,94 @@
           description: this.description,
           startDateTime: new Date(this.startDate).getTime(),
           endDateTime: new Date(this.endDate).getTime(),
-          reservePrice: this.reservePrice,
-          startingBid: this.startingBid
+          reservePrice: parseInt(this.reservePrice),
+          startingBid: parseInt(this.startingBid)
         })}).then(function(response){
-
+          this.auctionId = response.data.id;
+          if (document.getElementById("postPhoto").files[0] !== undefined) {
+            this.postAphoto();
+          }
+          this.errorFlagCreate = false;
+          this.errorFlag = false;
+          this.errorFlagPostPhoto = false;
         }, function(error) {
           this.error = error;
-          this.errorFlag = true;
+          this.errorFlagCreate = true;
+          this.errorFlag = false;
+          this.errorFlagPostPhoto = false;
+        })
+      },
+      postAphoto: function() {
+        let files = document.getElementById("postPhoto").files;
+        this.$http.post('http://localhost:4941/api/v1/auctions/' + this.auctionId + '/photos', files[0], {
+          headers: {
+          'X-Authorization': localStorage.getItem("token"),
+          'Content-type': files[0].type
+          }
+        }).then(function(response) {
+          this.errorFlagCreate = false;
+          this.errorFlag = false;
+          this.errorFlagPostPhoto = false;
+        }, function(error) {
+          this.error = error;
+          this.errorFlagPostPhoto = true;
+          this.errorFlag = false;
+          this.errorFlagCreate = false;
         })
       },
       check: function() {
+        this.startIndex = 0;
+        this.count = 3;
         if (document.getElementById("winner").checked) {
           this.getMyAuctionsOnlyWon();
+          this.currentId = '3';
         }
         else if (document.getElementById("expired").checked) {
           this.getMyAuctionsExpired();
+          this.currentId = '2';
         } else if (document.getElementById("inProgress").checked) {
+          this.currentId = '1';
           this.getMyAuctionsInProgress();
         } else {
+          this.currentId = '0';
           this.getMyAuctions();
+        }
+      },
+      next: function() {
+        if (this.globalAuctions.length > this.count) {
+          this.startIndex += 3;
+          this.count += 3;
+          console.log(this.startIndex);
+          console.log(this.count);
+          console.log(this.currentId);
+          if (this.currentId === '0') {
+            this.getMyAuctions();
+          } else if (this.currentId === '1') {
+            this.getMyAuctionsInProgress();
+          } else if (this.currentId === '2') {
+            this.getMyAuctionsExpired();
+          } else if (this.currentId === '3') {
+            this.getMyAuctionsOnlyWon();
+          }
+        }
+      },
+      back: function() {
+        this.startIndex -= 3;
+        this.count -= 3;
+        if (this.startIndex <= 0) {
+          this.startIndex = 0;
+          this.count = 3;
+        }
+        console.log(this.startIndex);
+        console.log(this.count);
+        if (this.currentId === '0') {
+          this.getMyAuctions();
+        } else if (this.curentId === '1') {
+          this.getMyAuctionsInProgress();
+        } else if (this.curentId === '2') {
+          this.getMyAuctionsExpired();
+        } else if (this.curentId === '3') {
+          this.getMyAuctionsOnlyWon();
         }
       }
     }
@@ -275,7 +370,12 @@
     background-color: rgba(255, 255, 255, 0.5);
     height: 240px;
     width: 1405px;
-    margin: auto auto 10px auto;
+    margin: auto auto 20px auto;
+    border-radius: 5px;
+  }
+
+  #auctionsMine:hover{
+    box-shadow: 0 8px 16px 0 rgba(133, 133, 133, 0.37);
   }
 
   #dropdown {

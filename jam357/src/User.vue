@@ -116,9 +116,10 @@
 <style>
   #user {
     background-color: rgba(128, 128, 128, 0.5);
-    height: 300px;
+    height: 310px;
     width: 1164px;
     margin: 0 auto 30px auto;
+    border-radius: 5px;
   }
 
   #otherUser {
@@ -127,5 +128,6 @@
     margin-bottom: 10px;
     margin-right: auto;
     margin-left: auto;
+    border-radius: 5px;
   }
 </style>
