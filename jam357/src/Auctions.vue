@@ -2,7 +2,6 @@
   <div>
     <div v-if="errorFlag" style="color: red;">
       {{ error }}
-      <!--<h3>No auctions found</h3>-->
     </div>
 
     <div align="center" style="margin-bottom: 10px">
@@ -87,7 +86,10 @@
     <div v-if="$route.params.category === '1'">
       <div id="apparel">
         <div v-for="auction in auctions" v-if="auction.categoryId === 1" id="auctionsApparel">
-          <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+          <br />
+          <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+          <br />
+          <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
         </div>
       </div>
     </div>
@@ -96,7 +98,10 @@
       <div id="equipment">
         <div v-for="auction in auctions">
           <div v-if="auction.categoryId === 2" id="auctionsEquipment">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -106,7 +111,10 @@
       <div id="vehicle">
         <div v-for="auction in auctions">
           <div v-if="auction.categoryId === 3" id="auctionsVehicle">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -116,7 +124,10 @@
       <div id="property">
         <div v-for="auction in auctions">
           <div v-if="auction.categoryId === 4" id="auctionsProperty">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -126,7 +137,10 @@
       <div id="other">
         <div v-for="auction in auctions">
           <div v-if="auction.categoryId === 5" id="auctionsOther">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -135,7 +149,10 @@
     <div v-else-if="$route.params.status === '0'">
       <div id="searched">
         <div v-for="auction in auctionsWithSearch" id="auctionsSearched">
-          <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+          <br />
+          <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+          <br />
+          <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
         </div>
       </div>
     </div>
@@ -143,7 +160,10 @@
     <div v-else-if="$route.params.status === '1'">
       <div id="allAuctions">
         <div id="auctions" v-for="auction in auctions">
-          <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+          <br />
+          <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+          <br />
+          <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
         </div>
       </div>
     </div>
@@ -152,7 +172,10 @@
       <div id="expired">
         <div v-for="auction in auctions">
           <div v-if="auction.endDateTime <= new Date()" id="auctionsExpired">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -162,7 +185,10 @@
       <div id="upcoming">
         <div v-for="auction in auctions">
           <div v-if="auction.startDateTime >= new Date()" id="auctionsUpcoming">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -172,7 +198,10 @@
       <div id="won">
         <div v-for="auction in auctionsWon">
           <div v-if="auction.endDateTime <= new Date()" id="auctionsWon">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -182,7 +211,10 @@
       <div id="inProgress">
         <div v-for="auction in auctionsBidOn">
           <div v-if="auction.endDateTime >= new Date()" id="auctionsBid">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -190,10 +222,11 @@
 
     <div v-else-if="$route.params.status === '6'">
       <div id="seller">
-        <div v-for="auction in auctionsMine">
-          <div id="auctionsMine">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
-          </div>
+        <div v-for="auction in auctionsMine" id="auctionsMine">
+          <br />
+          <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+          <br />
+          <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
         </div>
       </div>
     </div>
@@ -202,7 +235,10 @@
       <div id="active">
         <div v-for="auction in auctions">
           <div v-if="auction.endDateTime >= new Date() && auction.startDateTime <= new Date()" id="auctionsActive">
-            <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+            <br />
+            <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+            <br />
+            <p><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
           </div>
         </div>
       </div>
@@ -312,8 +348,7 @@
         });
       },
       initialise: function() {
-        this.token = localStorage.getItem("token");
-        if (this.token.length <= 1) {
+        if (localStorage.getItem("token") == undefined) {
           this.hide('myTrade');
         }
       }
@@ -324,11 +359,10 @@
 <style>
   #auctions, #auctionsApparel, #auctionsEquipment, #auctionsVehicle, #auctionsProperty, #auctionsOther, #auctionsActive,
   #auctionsExpired, #auctionsUpcoming, #auctionsWon, #auctionsSearched, #auctionsBid, #auctionsMine {
-    float: left;
-    background-color: rgba(128, 128, 128, 0.5);
-    height: 200px;
-    width: 1164px;
-    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    height: 240px;
+    width: 1405px;
+    margin: auto auto 10px auto;
   }
 
 </style>

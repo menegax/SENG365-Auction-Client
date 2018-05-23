@@ -115,11 +115,10 @@
 
 <style>
   #user {
-    float: left;
     background-color: rgba(128, 128, 128, 0.5);
     height: 300px;
     width: 1164px;
-    margin-bottom: 10px;
+    margin: 0 auto 30px auto;
   }
 
   #otherUser {

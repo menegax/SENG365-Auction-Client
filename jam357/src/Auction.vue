@@ -3,7 +3,11 @@
       <h1>
         <router-link :to="{ name: 'active' }" style="color:WHITE"><font size="6">Back to auctions</font></router-link>
       </h1>
-      <br /><br />
+      <br />
+
+      <div v-if="errorFlagBid" style="color: red;">
+        Invalid bid, your bid must increase current bid
+      </div>
 
       <button id="bid" type="button" class="btn btn-secondary btn" data-toggle="modal" data-target="#createBidModal">Bid on this auction</button>
       <br /><br />
@@ -41,15 +45,22 @@
         </div>
       </div>
 
-      <div id="auctionView" v-for="auction in auctions">
-        <p><font size="5">{{ "Category title: " + auction.categoryTitle }}</font></p>
-        <p><router-link :to="{ name: 'otherUser', params: { userId: auction.seller.id } }" style="color:WHITE"><font size="5">{{ "Auction seller: " + auction.seller.username }}</font></router-link></p>
-        <p><font size="5">{{ "Auction title: " + auction.title }}</font></p>
-        <p><font size="5">{{ "Description: " + auction.description }}</font></p>
-        <p><font size="5">{{ "Auction starting date time: " + new Date(auction.startDateTime).toLocaleDateString() + " " + new Date(auction.startDateTime).toLocaleTimeString() }}</font></p>
-        <p><font size="5">{{ "Auction ending date time: " + new Date(auction.endDateTime).toLocaleDateString() + " " + new Date(auction.endDateTime).toLocaleTimeString() }}</font></p>
-        <p><font size="5">{{ "Reserve price: $" + auction.reservePrice }}</font></p>
-        <p><font size="5">{{ "Current bid: $" + auction.currentBid }}</font></p>
+      <div id="imageAndText" v-for="auction in auctions">
+
+          <br />
+          <p style="float:left; margin-left: 20px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + $route.params.auctionId + '/photos'" width="400px" height="400px"></p>
+          <br />
+
+          <div id="text">
+            <p><font size="5">{{ "Category title: " + auction.categoryTitle }}</font></p>
+            <p><router-link :to="{ name: 'otherUser', params: { userId: auction.seller.id } }" style="color:WHITE"><font size="5">{{ "Auction seller: " + auction.seller.username }}</font></router-link></p>
+            <p><font size="5">{{ "Auction title: " + auction.title }}</font></p>
+            <p><font size="5">{{ "Description: " + auction.description }}</font></p>
+            <p><font size="5">{{ "Auction starting date time: " + new Date(auction.startDateTime).toLocaleDateString() + " " + new Date(auction.startDateTime).toLocaleTimeString() }}</font></p>
+            <p><font size="5">{{ "Auction ending date time: " + new Date(auction.endDateTime).toLocaleDateString() + " " + new Date(auction.endDateTime).toLocaleTimeString() }}</font></p>
+            <p><font size="5">{{ "Reserve price: $" + auction.reservePrice }}</font></p>
+            <p><font size="5">{{ "Current bid: $" + auction.currentBid }}</font></p>
+          </div>
       </div>
 
       <div v-if="bids.length>0" style="margin-bottom: 80px">
@@ -71,10 +82,12 @@
       return {
         error: "",
         errorFlag: false,
+        errorFlagBid: false,
         auctions: [],
         bids: [],
         amount: "",
-        token: localStorage.getItem("token")
+        token: localStorage.getItem("token"),
+        sellerId: 0
       }
     },
     mounted: function() {
@@ -104,6 +117,9 @@
       getAuction: function(){
         this.$http.get('http://localhost:4941/api/v1/auctions/' + this.$route.params.auctionId).then(function(response){
           this.auctions = [response.data];
+          if (localStorage.getItem("userId") === response.data.seller.id.toString()) {
+            this.hide('bid');
+          }
         }, function(error) {
           this.error = error;
           this.errorFlag = true;
@@ -122,14 +138,14 @@
         this.$http({method: 'post', url: 'http://localhost:4941/api/v1/auctions/' + this.$route.params.auctionId + '/bids?amount=' + this.amount, headers: { "X-Authorization": localStorage.getItem("token") } }).then(function(response){
           this.getBids();
           this.getAuction();
+          this.errorFlagBid = false;
         }, function(error) {
           this.error = error;
-          this.errorFlag = true;
+          this.errorFlagBid = true;
         });
       },
       initialise: function() {
-        this.token = localStorage.getItem("token");
-        if (this.token.length <= 1) {
+        if (localStorage.getItem("token") === undefined) {
           this.hide('bid');
         }
       }
@@ -138,19 +154,19 @@
 </script>
 
 <style>
-  #auctionView {
-    float: left;
-    background-color: rgba(128, 128, 128, 0.5);
-    height: 650px;
-    width: 1164px;
-    margin-bottom: 30px;
+  #imageAndText {
+    background-color: rgba(255, 255, 255, 0.5);
+    height: 440px;
+    width: 1100px;
+    margin: 0 auto 30px auto;
   }
 
   #bids {
-    background-color: rgba(128, 128, 128, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     width: 500px;
     margin-bottom: 10px;
     margin-right: auto;
     margin-left: auto;
   }
+
 </style>

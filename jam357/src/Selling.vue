@@ -17,8 +17,7 @@
 
       <p style="color:WHITE" id="progressLabel"><font size="6">My auctions in progress</font></p>
       <p style="color:WHITE" id="wonLabel"><font size="6">My auctions won</font></p>
-      <p style="color:WHITE" id="myAuctionsLabel"><font size="6">My Auctions:</font></p>
-
+      <a class="dropdown-item" style="color: white"><router-link :to="{ name: 'seller' }" style="color:white" @click.native="getMyAuctions()"><font size="7">My auctions</font></router-link></a>
 
     <div class="d-flex" style="margin-bottom: 10px">
       <div class="btn-group pull-left" id="filterSelling">
@@ -28,7 +27,7 @@
         <div id="dropdown" class="dropdown-menu dropdown-menu" aria-labelledby="filter" style="background-color: rgb(128,128,128)">
           <input class="form-check-input" type="radio" value="" id="expired" @click="check()" name="radio">
           <label class="form-check-label" for="expired">
-            Expired auctions
+            Expired auctions without a winner
           </label>
           <br>
           <input class="form-check-input" type="radio" value="" id="winner" @click="check()" name="radio">
@@ -43,8 +42,9 @@
         </div>
       </div>
 
-      <button id="bid" type="button" class="btn btn-secondary btn-lg pull-right" data-toggle="modal" data-target="#createAuctionModal" style="margin-right: 15px; margin-bottom: 5px">+</button>
-
+      <button id="bid" type="button" class="btn btn-secondary btn-lg pull-right" data-toggle="modal" data-target="#createAuctionModal" style="margin-right: auto">+</button>
+      <br />
+      <br />
     </div>
 
     <div>
@@ -78,7 +78,7 @@
                 <div class="form-group">
                   <label class="control-label col-sm-3">Auction start date:</label>
                   <div class="col-sm-9">
-                    <input class="col-lg-10" type="date" id="startDate" v-model="startDate">
+                    <input class="col-lg-10" type="datetime-local" id="startDate" v-model="startDate">
                   </div>
                 </div>
               </form>
@@ -86,7 +86,7 @@
                 <div class="form-group">
                   <label class="control-label col-sm-3">Auction end date:</label>
                   <div class="col-sm-9">
-                    <input class="col-lg-10" type="date" id="endDate" v-model="endDate">
+                    <input class="col-lg-10" type="datetime-local" id="endDate" v-model="endDate">
                   </div>
                 </div>
               </form>
@@ -137,7 +137,10 @@
     <div id="seller">
       <div v-for="auction in auctionsMine">
         <div id="auctionsMine">
-          <p align="left"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
+          <br />
+          <p style="float:left; margin-left: 10px"><img v-bind:src="'http://localhost:4941/api/v1/auctions/' + auction.id + '/photos'" width="200px" height="200px"></p>
+          <br />
+          <p style="margin-top: 50px"><router-link :to="{ name: 'auction', params: { auctionId: auction.id }}" style="color:white"><font size="5">{{ auction.title }}</font></router-link></p>
         </div>
       </div>
     </div>
@@ -199,6 +202,9 @@
       },
       getMyAuctions: function() {
         this.$http.get('http://localhost:4941/api/v1/auctions?seller=' + this.userId).then(function(response){
+          document.getElementById("inProgress").checked = false;
+          document.getElementById("winner").checked = false;
+          document.getElementById("expired").checked = false;
           this.auctionsMine = response.data;
         }, function(error) {
           this.error = error;
@@ -234,11 +240,11 @@
       },
       createAuction: function(){
         this.$http({method: 'post', url: 'http://localhost:4941/api/v1/auctions', headers: { 'X-Authorization': localStorage.getItem("token") }, body: JSON.stringify({
-          categoryId: this.categoryId,
+          categoryId: parseInt(document.getElementById("categoryId").options[document.getElementById("categoryId").selectedIndex].value),
           title: this.title,
           description: this.description,
-          startDateTime: this.startDate,
-          endDateTime: this.endDate,
+          startDateTime: new Date(this.startDate).getTime(),
+          endDateTime: new Date(this.endDate).getTime(),
           reservePrice: this.reservePrice,
           startingBid: this.startingBid
         })}).then(function(response){
@@ -251,17 +257,11 @@
       check: function() {
         if (document.getElementById("winner").checked) {
           this.getMyAuctionsOnlyWon();
-          // document.getElementById("expired").checked = false;
-          // document.getElementById("inProgress").checked = false;
         }
         else if (document.getElementById("expired").checked) {
           this.getMyAuctionsExpired();
-          // document.getElementById("inProgress").checked = false;
-          // document.getElementById("winner").checked = false;
         } else if (document.getElementById("inProgress").checked) {
           this.getMyAuctionsInProgress();
-          // document.getElementById("expired").checked = false;
-          // document.getElementById("winner").checked = false;
         } else {
           this.getMyAuctions();
         }
@@ -272,19 +272,22 @@
 
 <style>
   #auctionsMine {
-    float: left;
-    background-color: rgba(128, 128, 128, 0.5);
-    height: 200px;
-    width: 1164px;
-    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    height: 240px;
+    width: 1405px;
+    margin: auto auto 10px auto;
   }
 
   #dropdown {
-    width: 200px;
+    width: 250px;
   }
 
   #categoryId {
     width: 535px;
     margin-right: 140px
   }
+
+  /*.d-flex {*/
+    /*margin: 0 auto 40px auto;*/
+  /*}*/
 </style>

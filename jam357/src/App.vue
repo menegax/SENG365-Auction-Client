@@ -7,11 +7,11 @@
     <div class="d-flex" id="navigation" style="margin-bottom: 30px">
 
       <img src="./assets/365logo.png" class="center" align="left">
-      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 780px"><font size="6">Trade365</font></router-link>
+      <router-link :to="{ name: 'active' }" style="color:WHITE; margin-right: 1000px"><font size="6">Trade365</font></router-link>
 
-      <button id="register" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#createUserModal">Register</button>
-      <button id="login" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#loginUserModal">Login</button>
-      <button id="logout" type="button" class="btn btn-secondary btn-lg" data-toggle="modal" data-target="#logoutUserModal">Logout</button>
+      <button id="register" type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#createUserModal">Register</button>
+      <button id="login" type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#loginUserModal">Login</button>
+      <button id="logout" type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#logoutUserModal">Logout</button>
     </div>
 
     <div v-if="errorFlagLogin" style="color: red;">
@@ -304,7 +304,7 @@
   body {
     margin-left: 250px;
     margin-right: 250px;
-    background-color: rgb(117, 57, 141);
+    background-color: BLACK;
   }
 
   h1, h2 {
@@ -357,7 +357,7 @@
   }
 
   button {
-    background-color: rgba(128, 128, 128, 0.65);
+    color: BLACK;
   }
 
   input {
